@@ -1,6 +1,7 @@
 name: sonarcloud
 on:
   push:
+  pull_request_target:
   pull_request:
 
 jobs:
@@ -9,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout action
+        if: github.event_name == 'pull_request_target'
+          run:|
+           git checkout "${{ github.event.pull_request.head.ref }}"
+           else
         uses: actions/checkout@v3
       #  with:
          # fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
