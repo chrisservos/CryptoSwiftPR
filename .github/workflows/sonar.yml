@@ -5,7 +5,7 @@ on:
       - master
       - main
   pull_request:
-    types: [opened, synchronize, reopened]
+
 jobs:
   sonarcloud:
     name: SonarCloud
@@ -24,8 +24,6 @@ jobs:
                 -Dsonar.c.file.suffixes=-
                 -Dsonar.cpp.file.suffixes=-
                 -Dsonar.objc.file.suffixes=-
- #               -Dsonar.tests=Tests/
-
         env:
-      #    GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
