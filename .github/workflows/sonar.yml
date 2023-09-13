@@ -3,20 +3,26 @@ on:
   push:
   pull_request_target:
   pull_request:
-
+  workflow_dispatch:
+ 
 jobs:
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
+      - name: TROUBLESHOOTING
+        run: |
+         echo " ${{ github.event_name }} = EVENT "
+         echo " ${{ github.event.pull_request.number }} = PR number"
+         echo " ${{ github.event.pull_request.base.ref }} = PR base ref" 
+         echo "${{ github.event.pull_request.head.ref }} = PR head ref"
+         exit 1
       - name: Checkout action
         if: github.event_name == 'pull_request_target'
-          run:|
-           git checkout "${{ github.event.pull_request.head.ref }}"
-           else
         uses: actions/checkout@v3
-      #  with:
-         # fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+        with:
+         fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+         ref: ${{ github.event.pull_request.head.ref }}
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         with:
@@ -26,6 +32,9 @@ jobs:
                 -Dsonar.c.file.suffixes=-
                 -Dsonar.cpp.file.suffixes=-
                 -Dsonar.objc.file.suffixes=-
+                -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+                -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
+                -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
