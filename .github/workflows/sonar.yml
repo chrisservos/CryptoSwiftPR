@@ -10,6 +10,10 @@ jobs:
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
+      - name: TROUBLESHOOTING
+         run:|
+         echo github.event_name
+         exit 1
       - name: Checkout action
         if: github.event_name == 'pull_request_target'
         uses: actions/checkout@v3
