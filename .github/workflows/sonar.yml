@@ -12,7 +12,8 @@ jobs:
     steps:
       - name: TROUBLESHOOTING
         run: |
-         echo ${{ github.event.name }}
+         echo "test"
+         echo "${{ github.event.name }}"
          exit 1
       - name: Checkout action
         if: github.event_name == 'pull_request_target'
