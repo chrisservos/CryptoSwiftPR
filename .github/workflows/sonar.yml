@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: TROUBLESHOOTING
-        if: github.event_name =! 'push'
+        if: github.event_name != 'push'
         run: |
          echo "test"
          echo "${{ github.event.name }}"
