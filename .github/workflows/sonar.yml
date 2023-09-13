@@ -16,7 +16,7 @@ jobs:
          echo " ${{ github.event.pull_request.number }} = PR number"
          echo " ${{ github.event.pull_request.base.ref }} = PR base ref" 
          echo "${{ github.event.pull_request.head.ref }} = PR head ref"
-         exit 1
+        # exit 1
       - name: Checkout action
         if: github.event_name == 'pull_request_target'
         uses: actions/checkout@v3
