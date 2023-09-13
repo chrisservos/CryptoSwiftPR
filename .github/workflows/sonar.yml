@@ -11,10 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: TROUBLESHOOTING
-        if: github.event_name != 'push'
         run: |
-         echo "test"
-         echo "${{ github.event.name }}"
+         echo "This workflow was triggered by a ${{ github.event_name }} event."
          exit 1
       - name: Checkout action
         if: github.event_name == 'pull_request_target'
