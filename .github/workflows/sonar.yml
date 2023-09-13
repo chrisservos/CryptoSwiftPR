@@ -12,7 +12,8 @@ jobs:
     steps:
       - name: TROUBLESHOOTING
         run: |
-         echo "This workflow was triggered by a ${{ github.event_name }} event."
+         # echo "This workflow was triggered by a ${{ github.event_name }} event."
+         echo " ${{ github.event_name }} EVENT <~ "
          exit 1
       - name: Checkout action
         if: github.event_name == 'pull_request_target'
