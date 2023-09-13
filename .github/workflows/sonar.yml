@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: TROUBLESHOOTING
-         run:|
+        run: |
          echo github.event_name
          exit 1
       - name: Checkout action
