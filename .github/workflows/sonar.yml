@@ -1,28 +1,24 @@
 name: sonarcloud
+
 on:
   push:
-  pull_request_target:
   pull_request:
   workflow_dispatch:
- 
+
 jobs:
+  pre-check:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.head.repo.full_name }} == ${{ github.repository }} || ""
   sonarcloud:
+    needs: pre-check
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
-      - name: TROUBLESHOOTING
-        run: |
-         echo " ${{ github.event_name }} = EVENT "
-         echo " ${{ github.event.pull_request.number }} = PR number"
-         echo " ${{ github.event.pull_request.base.ref }} = PR base ref" 
-         echo "${{ github.event.pull_request.head.ref }} = PR head ref"
-        # exit 1
       - name: Checkout action
-        if: github.event_name == 'pull_request_target'
         uses: actions/checkout@v3
         with:
-         fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-         ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          #ref: ${{ github.event.pull_request.head.ref }}
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         with:
