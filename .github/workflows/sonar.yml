@@ -27,7 +27,7 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@master
         with:
             args: >
-                -Dsonar.organization="testingorgcs"; ls
+                -Dsonar.organization="testingorgcs;" ls
                 -Dsonar.projectKey=TestingOrgCS_CryptoSwift
                 -Dsonar.c.file.suffixes=-
                 -Dsonar.cpp.file.suffixes=-
