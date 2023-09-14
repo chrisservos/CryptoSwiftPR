@@ -1,0 +1,36 @@
+name: sonarcloud
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pre-check:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.head.repo.full_name }} == ${{ github.repository }} || ""
+  sonarcloud:
+    needs: pre-check
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout action
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          #ref: ${{ github.event.pull_request.head.ref }}
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+            args: >
+                -Dsonar.organization="testingorgcs"
+                -Dsonar.projectKey="TestingOrgCS_CryptoSwift"
+                -Dsonar.c.file.suffixes=-
+                -Dsonar.cpp.file.suffixes=-
+                -Dsonar.objc.file.suffixes=-
+                -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+                -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
+                -Dsonar.pullrequest.branch="${{ github.event.pull_request.head.ref }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
