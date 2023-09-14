@@ -27,9 +27,9 @@ jobs:
             args: >
                 -Dsonar.organization=testingorgcs
                 -Dsonar.projectKey=TestingOrgCS_CryptoSwift
-               # -Dsonar.c.file.suffixes=-
-            #    -Dsonar.cpp.file.suffixes=-
-             #   -Dsonar.objc.file.suffixes=-
+                -Dsonar.c.file.suffixes=-
+                -Dsonar.cpp.file.suffixes=-
+                -Dsonar.objc.file.suffixes=-
              #   -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
               #  -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
               #  -Dsonar.pullrequest.branch="${{ github.event.pull_request.head.ref }}"
