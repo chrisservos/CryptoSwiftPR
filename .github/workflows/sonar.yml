@@ -2,7 +2,7 @@ name: sonarcloud
 
 on:
   push:
-  pull_request:
+  pull_request_target:
   workflow_dispatch:
 
 jobs:
@@ -10,7 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.head.repo.full_name }} == ${{ github.repository }} || ""
     steps:
-     - run: echo "this is push or internalPR. it is actually a ${{ github.event_name }}"
+     - run: |
+         echo "this is push or internalPR. it is actually a ${{ github.event_name }}"
+         echo "${{ github.event.pull_request.head.repo.full_name }}"
+      
   sonarcloud:
     needs: pre-check
     name: SonarCloud
