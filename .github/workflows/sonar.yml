@@ -12,7 +12,8 @@ jobs:
     steps:
      - run: |
          echo "this is push or internalPR. it is actually a ${{ github.event_name }}"
-         echo "${{ github.event.pull_request.head.repo.full_name }}"
+         echo "Head repo: ${{ github.event.pull_request.head.repo.full_name }}"
+         echo "Current repo: ${{ github.repository }}"
       
   sonarcloud:
     needs: pre-check
