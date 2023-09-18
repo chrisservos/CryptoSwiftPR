@@ -15,7 +15,7 @@ jobs:
             exit 1
           else
             echo "PROJECTKEY=${{ github.repository_owner}}_$(echo ${{ github.repository }} | sed 's/.*\///')" >> $GITHUB_ENV
-          fi:
+          fi
     env:
        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   
