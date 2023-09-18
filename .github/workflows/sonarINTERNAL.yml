@@ -30,7 +30,7 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@master
         with:
             args: >
-                -Dsonar.organization=${{ github.repository_owner }}
+                -Dsonar.organization=testingorgcs
                 -Dsonar.projectKey=${{ env.PROJECTKEY }}
                 -Dsonar.c.file.suffixes=-
                 -Dsonar.cpp.file.suffixes=-
@@ -56,7 +56,7 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@master
         with:
             args: >
-                -Dsonar.organization=${{ github.repository_owner }}
+                -Dsonar.organization=testingorgcs
                 -Dsonar.projectKey=${{ env.PROJECTKEY }}
                 -Dsonar.c.file.suffixes=-
                 -Dsonar.cpp.file.suffixes=-
