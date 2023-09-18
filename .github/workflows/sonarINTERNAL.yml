@@ -22,10 +22,10 @@ jobs:
     if: (github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request_target')  || github.event_name == 'push'|| github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout action
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-          #ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: setup projectkey
         run: echo "PROJECTKEY=${{ github.repository_owner}}_$(echo ${{ github.repository }} | sed 's/.*\///')" >> $GITHUB_ENV
       - name: SonarCloud Scan - Action
