@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: |
-          if [ "${{ secrets.SONAR_TOKEN }}" == "" ]; then
+          if [[ -z "$SONAR_TOKEN" ]]; then
             exit 1
           else
             echo "PROJECTKEY=${{ github.repository_owner}}_$(echo ${{ github.repository }} | sed 's/.*\///')" >> $GITHUB_ENV
