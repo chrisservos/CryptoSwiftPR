@@ -1,0 +1,69 @@
+name: sonarcloud
+
+on:
+  push:
+  pull_request_target:
+  workflow_dispatch:
+
+jobs:
+  workflow_setup:
+    name: Check secret presence and setup projectkey
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+          if [ "$SONAR_TOKEN" == "" ]; then
+            exit 1
+          else
+            echo "PROJECTKEY=${{ github.repository_owner}}_$(echo ${{ github.repository }} | sed 's/.*\///')" >> $GITHUB_ENV
+    env:
+       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  
+  internalPR_or_push:
+    name: SonarCloud - internalPR or push
+    needs: workflow_setup
+    runs-on: ubuntu-latest
+    if: (github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request_target')  || github.event_name == 'push'
+    steps:
+      - name: Checkout action
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan - Action
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+            args: >
+                -Dsonar.organization=${{ github.repository_owner }}
+                -Dsonar.projectKey=${{ env.PROJECTKEY }}
+                -Dsonar.c.file.suffixes=-
+                -Dsonar.cpp.file.suffixes=-
+                -Dsonar.objc.file.suffixes=-
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      
+  externalPR:
+    name: SonarCloud - externalPR
+    needs: workflow_setup
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name != github.repository && github.event_name == 'pull_request_target'
+    steps:
+      - name: Checkout action
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: SonarCloud Scan - Action
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+            args: >
+                -Dsonar.organization=${{ github.repository_owner }}
+                -Dsonar.projectKey=${{ env.PROJECTKEY }}
+                -Dsonar.c.file.suffixes=-
+                -Dsonar.cpp.file.suffixes=-
+                -Dsonar.objc.file.suffixes=-
+                -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+                -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
+                -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
