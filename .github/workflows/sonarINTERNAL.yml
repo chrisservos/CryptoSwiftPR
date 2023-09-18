@@ -14,11 +14,11 @@ jobs:
     env:
        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   
-  internalPR_or_push:
-    name: SonarCloud - internalPR or push
+  internalPR_push_or_manual_trigger:
+    name: SonarCloud - internalPR , push, or workflow_dispatch
     needs: check_secret
     runs-on: ubuntu-latest
-    if: (github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request_target')  || github.event_name == 'push'
+    if: (github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request_target')  || github.event_name == 'push'|| github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout action
         uses: actions/checkout@v3
