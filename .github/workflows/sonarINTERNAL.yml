@@ -2,6 +2,7 @@ name: sonarcloud_FINAL
 
 on:
   push:
+   branches: ['main']
   pull_request_target:
   workflow_dispatch:
 
