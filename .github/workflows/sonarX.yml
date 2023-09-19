@@ -1,9 +1,9 @@
-name: sonarcloud_FINAL
+name: sonarX
 
 on:
-  #push:
-   #branches: ['main']
-  #pull_request_target:
+  push:
+   branches: ['main']
+  pull_request_target:
   workflow_dispatch:
 
 jobs:
@@ -15,17 +15,16 @@ jobs:
     env:
        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   
-  internalPR_push_or_manual_trigger:
-    name: SonarCloud - internalPR , push, or workflow_dispatch
+  push_or_manual_trigger:
+    name: SonarCloud - push/workflow_dispatch
     needs: check_secret
     runs-on: ubuntu-latest
-    if: (github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request_target')  || github.event_name == 'push'|| github.event_name == 'workflow_dispatch'
+    if: (github.event_name == 'push'|| github.event_name == 'workflow_dispatch')
     steps:
       - name: Checkout action
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-          ref: ${{ github.event.pull_request.head.sha }}
       - name: setup projectkey
         run: echo "PROJECTKEY=${{ github.repository_owner}}_$(echo ${{ github.repository }} | sed 's/.*\///')" >> $GITHUB_ENV
       - name: SonarCloud Scan - Action
@@ -37,18 +36,15 @@ jobs:
                 -Dsonar.c.file.suffixes=-
                 -Dsonar.cpp.file.suffixes=-
                 -Dsonar.objc.file.suffixes=-
-                -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
-                -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
-                -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       
-  externalPR:
-    name: SonarCloud - externalPR
+  PR_analysis:
+    name: SonarCloud - internal/external pull request analysis
     needs: check_secret
     runs-on: ubuntu-latest
-    if: (github.event.pull_request.head.repo.full_name != github.repository && github.event_name == 'pull_request_target')
+    if: (github.event_name == 'pull_request_target')
     steps:
       - name: Checkout action
         uses: actions/checkout@v4
